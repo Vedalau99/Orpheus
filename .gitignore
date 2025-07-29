@@ -2,3 +2,4 @@ echo "# Orpheus - DevOps Showcase Project" > README.md
 echo ".terraform/" > .gitignore
 echo "*.tfstate*" >> .gitignore
 echo ".DS_Store" >> .gitignore
+echo ".terraform/" >> .gitignore
