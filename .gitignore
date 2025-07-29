@@ -1,26 +1,16 @@
-# .gitignore (safe Terraform + Python + Docker setup)
+
+# Terraform directories and files
 .terraform/
 *.tfstate
-*.tfstate.*
+*.tfstate.backup
 crash.log
-*.log
-*.backup
-*.zip
+terraform.tfvars
+.terraform.lock.hcl
 
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-.env
-.env.*
-
-# Docker
-*.tar
-docker-compose.override.yml
-
-# OS
+# OS files
 .DS_Store
 Thumbs.db
 
-# VSCode
+# IDE/editor files
 .vscode/
+*.swp
