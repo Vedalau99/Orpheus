@@ -54,5 +54,5 @@ Demonstrates AI-assisted tooling
 
 Includes full IaC, GitOps, CI/CD, and monitoring
 
-Easy to present in demos or explain in interviews
+Easy to present in demos 
 
