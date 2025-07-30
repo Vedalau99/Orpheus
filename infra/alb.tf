@@ -29,6 +29,7 @@ resource "aws_lb" "orpheus_alb" {
     aws_subnet.orpheus_public_subnet.id,
     aws_subnet.orpheus_public_subnet_2.id
   ]
+  depends_on = [aws_security_group.alb_sg]
 
   tags = {
     Name = "orpheus-alb"
