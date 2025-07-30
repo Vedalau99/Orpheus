@@ -1,3 +1,4 @@
+
 name: Deploy to AWS
 
 on:
@@ -18,10 +19,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: arn:aws:iam::035636365361:role/vedala_github
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Log in to Amazon ECR
@@ -33,6 +35,14 @@ jobs:
           REPO_URL=$(aws ecr describe-repositories --repository-names $ECR_REPO_NAME --region $AWS_REGION --query 'repositories[0].repositoryUri' --output text)
           docker build -t $REPO_URL:$IMAGE_TAG ./app
           docker push $REPO_URL:$IMAGE_TAG
+
+      # === Terraform Begins ===
+
+      - name: Configure AWS credentials from OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::035636365361:role/vedala_github 
+          aws-region: us-east-1
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -47,4 +57,4 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ./infra
-        run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars
+        run: terraform apply -auto-approve -input=false -input=false -var-file=terraform.tfvars  
