@@ -1,5 +1,4 @@
-
-name: Deploy to AWS
+name: Deploy Orpheus to AWS
 
 on:
   push:
@@ -8,6 +7,7 @@ on:
 
 jobs:
   deploy:
+    name: CI/CD Deploy
     runs-on: ubuntu-latest
 
     env:
@@ -16,39 +16,39 @@ jobs:
       IMAGE_TAG: latest
 
     steps:
-      - name: Checkout code
+      - name:  Checkout code
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials
+      - name:  Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Log in to Amazon ECR
+      - name:  Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push Docker image to ECR
+      - name:  Build and Push Docker Image to ECR
         run: |
           REPO_URL=$(aws ecr describe-repositories --repository-names $ECR_REPO_NAME --region $AWS_REGION --query 'repositories[0].repositoryUri' --output text)
           docker build -t $REPO_URL:$IMAGE_TAG ./app
           docker push $REPO_URL:$IMAGE_TAG
 
-      # === Terraform Begins ===
-
-      - name: Setup Terraform
+      - name:  Set up Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
 
-      - name: Terraform Init
+      - name:  Terraform Init
         working-directory: ./infra
         run: terraform init
 
-      - name: Terraform Plan
+      - name:  Terraform Plan
         working-directory: ./infra
         run: terraform plan -input=false -var-file=terraform.tfvars
 
-      - name: Terraform Apply
+      - name:  Terraform Apply
         working-directory: ./infra
-        run: terraform apply -auto-approve -input=false -input=false -var-file=terraform.tfvars  
+        run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars
