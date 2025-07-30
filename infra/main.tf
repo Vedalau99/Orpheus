@@ -67,6 +67,11 @@ resource "aws_ecs_cluster" "orpheus_cluster" {
 resource "aws_iam_role" "ecs_task_execution_role" {
   name = "ecsTaskExecutionRole"
 
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [name]
+  }
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -80,6 +85,10 @@ resource "aws_iam_role" "ecs_task_execution_role" {
       }
     ]
   })
+
+  tags = {
+    Name = "ecs-execution-role"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
@@ -121,7 +130,10 @@ resource "aws_ecs_service" "orpheus_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = [aws_subnet.orpheus_public_subnet.id]
+    subnets          = [
+      aws_subnet.orpheus_public_subnet.id, 
+      aws_subnet.orpheus_public_subnet_2.id
+      ]
     assign_public_ip = true
     security_groups  = [aws_security_group.alb_sg.id]
   }

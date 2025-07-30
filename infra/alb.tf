@@ -2,7 +2,8 @@
 resource "aws_security_group" "alb_sg" {
   name        = "alb-sg"
   description = "Allow HTTP inbound traffic"
-  vpc_id      = var.vpc_id
+  vpc_id = aws_vpc.orpheus_vpc.id
+
 
   ingress {
     from_port   = 80
@@ -42,7 +43,8 @@ resource "aws_lb_target_group" "orpheus_tg" {
   name        = "orpheus-tg"
   port        = 5000
   protocol    = "HTTP"
-  vpc_id      = var.vpc_id
+  vpc_id = aws_vpc.orpheus_vpc.id
+
   target_type = "ip"
 
   health_check {
