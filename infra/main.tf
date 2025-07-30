@@ -123,15 +123,4 @@ resource "aws_ecs_service" "orpheus_service" {
   depends_on = [aws_lb_listener.orpheus_listener]
 }
 
-output "alb_dns_name" {
-  description = "Public DNS of the Application Load Balancer"
-  value       = aws_lb.orpheus_alb.dns_name
-}
 
-output "vpc_id" {
-  value = aws_vpc.orpheus_vpc.id
-}
-
-output "public_subnets" {
-  value = [aws_subnet.orpheus_public_subnet.id]
-}
