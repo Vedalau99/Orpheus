@@ -1,6 +1,10 @@
 resource "aws_cloudwatch_log_group" "orpheus_logs" {
   name              = "/ecs/orpheus-app"
   retention_in_days = 7
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = [tags] # optional
+  }
 }
 
 resource "aws_cloudwatch_metric_alarm" "high_cpu_alarm" {
