@@ -163,6 +163,12 @@ resource "aws_ecs_service" "orpheus_service" {
   desired_count   = 1
   task_definition = aws_ecs_task_definition.orpheus_task.arn
 
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app_tg.arn
+    container_name   = "orpheus-container"
+    container_port   = 5000
+  }
+
   network_configuration {
     subnets         = [aws_subnet.orpheus_subnet.id]
     security_groups = [aws_security_group.orpheus_sg.id]
@@ -170,7 +176,8 @@ resource "aws_ecs_service" "orpheus_service" {
   }
 
   depends_on = [
-    aws_iam_role_policy_attachment.ecs_execution_role_policy
+    aws_iam_role_policy_attachment.ecs_execution_role_policy,
+    aws_lb_listener.app_listener
   ]
 }
 
@@ -179,4 +186,8 @@ output "public_ip" {
   description = "Public IP assigned to the Fargate task"
 }
 
+output "alb_dns_name" {
+  value = aws_lb.app_alb.dns_name
+  description = "Public URL for Orpheus app"
+}
 
