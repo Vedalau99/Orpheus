@@ -106,19 +106,29 @@ resource "aws_ecs_task_definition" "orpheus_task" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
   container_definitions = jsonencode([
-    {
-      name      = "orpheus"
-      image     = "public.ecr.aws/docker/library/python:3.11"
-      essential = true
-      portMappings = [
-        {
-          containerPort = 5000
-          hostPort      = 5000
-        }
-      ]
-      command = ["python3", "-m", "http.server", "5000"]
+  {
+    name      = "orpheus"
+    image     = "public.ecr.aws/docker/library/python:3.11"
+    essential = true
+    portMappings = [
+      {
+        containerPort = 5000
+        hostPort      = 5000
+      }
+    ]
+    command = ["python3", "-m", "http.server", "5000"]
+    
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = "/ecs/orpheus-app"
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "orpheus"
+      }
     }
-  ])
+  }
+])
+
 }
 
 # ECS Service
