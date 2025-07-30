@@ -35,13 +35,18 @@ jobs:
           docker build -t $REPO_URL:$IMAGE_TAG ./app
           docker push $REPO_URL:$IMAGE_TAG
 
+      # === Terraform Begins ===
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.6.6
 
-      - name: Terraform Init & Apply
-        run: |
-          cd infra
-          terraform init
-          terraform apply -auto-approve
+      - name: Terraform Init
+        working-directory: ./infra
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ./infra
+        run: terraform plan -input=false
+
+      - name: Terraform Apply
+        working-directory: ./infra
+        run: terraform apply -auto-approve -input=false
