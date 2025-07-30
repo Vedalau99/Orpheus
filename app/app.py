@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from analyze_logs import analyze
 import random
 import boto3
 import os
@@ -31,20 +32,11 @@ def emit_prediction_metric(score):
 @app.route('/')
 def home():
     return jsonify({"message": "Welcome to Orpheus Monitoring App"})
-
-@app.route('/predict')
+@app.route('/predict', methods=['GET'])
 def predict():
-    # Simulate dummy prediction
-    score = round(random.uniform(0.1, 0.99), 2)
-    print(f"Prediction score: {score}")
-    
-    # Emit metric
-    emit_prediction_metric(score)
-    
-    return jsonify({
-        "status": "success",
-        "prediction_score": score
-    })
+    log_type = request.args.get('log_type', 'cpu')
+    result = analyze(log_type)
+    return jsonify({"result": result})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
