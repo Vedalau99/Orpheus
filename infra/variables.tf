@@ -9,3 +9,13 @@ variable "aws_profile" {
   type        = string
   default     = "default"
 }
+
+variable "vpc_id" {
+  description = "VPC ID for ALB and Target Group"
+  type        = string
+}
+
+variable "public_subnets" {
+  description = "List of public subnet IDs for ALB"
+  type        = list(string)
+}
