@@ -7,10 +7,13 @@ WORKDIR /app
 # Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir flask boto3
+
 
 # Copy app code
-COPY app.py .
+COPY . .
 
 # Expose port and run
 EXPOSE 5000
 CMD ["python", "app.py"]
+CMD ["python", "metrics.py"]
