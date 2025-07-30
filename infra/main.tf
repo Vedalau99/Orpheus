@@ -108,7 +108,7 @@ resource "aws_ecs_task_definition" "orpheus_task" {
   container_definitions = jsonencode([
   {
     name      = "orpheus"
-    image     = "public.ecr.aws/docker/library/python:3.11"
+    image     = var.image_url
     essential = true
     portMappings = [
       {

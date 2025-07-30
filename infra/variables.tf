@@ -4,6 +4,11 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+variable "image_url" {
+  type        = string
+  description = "Full ECR image URI"
+}
+
 variable "aws_profile" {
   description = "AWS CLI profile to use"
   type        = string
