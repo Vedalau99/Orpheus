@@ -1,7 +1,4 @@
-provider "aws" {
-  region  = var.aws_region
-  profile = var.aws_profile
-}
+
 
 # Create VPC
 resource "aws_vpc" "orpheus_vpc" {
