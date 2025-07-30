@@ -4,7 +4,6 @@
 *.tfstate
 *.tfstate.backup
 crash.log
-terraform.tfvars
 .terraform.lock.hcl
 
 # OS files
