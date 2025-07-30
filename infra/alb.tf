@@ -20,38 +20,35 @@ resource "aws_security_group" "alb_sg" {
 }
 
 # Create ALB
-resource "aws_lb" "app_alb" {
-  name               = "orpheus-alb"
+resource "aws_lb" "orpheus_alb" {
+  name               = "orpheus-app-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = aws_subnet.public[*].id
+  subnets            = var.public_subnets
 }
 
-# Target Group for ECS
-resource "aws_lb_target_group" "app_tg" {
-  name        = "orpheus-tg"
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id      = aws_vpc.main.id
+# 2. Target Group for Fargate
+resource "aws_lb_target_group" "orpheus_tg" {
+  name     = "orpheus-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
   target_type = "ip"
   health_check {
-    path                = "/"
-    interval            = 30
-    timeout             = 5
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
+    path = "/"
+    protocol = "HTTP"
   }
 }
 
-# Listener for ALB on port 80
-resource "aws_lb_listener" "app_listener" {
-  load_balancer_arn = aws_lb.app_alb.arn
+# 3. Listener
+resource "aws_lb_listener" "orpheus_listener" {
+  load_balancer_arn = aws_lb.orpheus_alb.arn
   port              = 80
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.app_tg.arn
+    target_group_arn = aws_lb_target_group.orpheus_tg.arn
   }
 }

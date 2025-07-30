@@ -165,8 +165,8 @@ resource "aws_ecs_service" "orpheus_service" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.app_tg.arn
-    container_name   = "orpheus-container"
-    container_port   = 5000
+    container_name   = "orpheus-app"
+    container_port   = 80
   }
 
   network_configuration {
@@ -180,6 +180,7 @@ resource "aws_ecs_service" "orpheus_service" {
     aws_lb_listener.app_listener
   ]
 }
+
 
 output "public_ip" {
   value = aws_ecs_service.orpheus_service.network_configuration[0].assign_public_ip
