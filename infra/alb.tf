@@ -27,6 +27,21 @@ resource "aws_lb" "orpheus_alb" {
   security_groups    = [aws_security_group.alb_sg.id]
   subnets            = var.public_subnets
 }
+resource "aws_lb" "orpheus_alb" {
+  name               = "orpheus-app-alb"
+  load_balancer_type = "application"
+
+  subnets = [
+    aws_subnet.orpheus_public_subnet.id,
+    aws_subnet.orpheus_public_subnet_2.id
+  ]
+
+  security_groups = [aws_security_group.alb_sg.id]
+
+  tags = {
+    Name = "orpheus-alb"
+  }
+}
 
 
 resource "aws_lb_target_group" "orpheus_tg" {

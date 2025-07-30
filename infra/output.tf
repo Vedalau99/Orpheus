@@ -8,10 +8,13 @@ output "vpc_id" {
   value       = aws_vpc.orpheus_vpc.id
 }
 
-output "public_subnet_id" {
-  description = "ID of the public subnet"
-  value       = aws_subnet.orpheus_public_subnet.id
+output "public_subnet_ids" {
+  value = [
+    aws_subnet.orpheus_public_subnet.id,
+    aws_subnet.orpheus_public_subnet_2.id
+  ]
 }
+
 
 #output "alb_security_group_id" {
 # description = "ID of the ALB security group"
