@@ -36,6 +36,13 @@ jobs:
           docker push $REPO_URL:$IMAGE_TAG
 
       # === Terraform Begins ===
+
+      - name: Configure AWS credentials from OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::035636365361:role/vedala_github 
+          aws-region: us-east-1
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
