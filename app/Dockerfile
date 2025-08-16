@@ -17,3 +17,4 @@ COPY . .
 EXPOSE 5000
 CMD ["python", "app.py"]
 CMD ["python", "metrics.py"]
+CMD ["python", "brain.py"]
